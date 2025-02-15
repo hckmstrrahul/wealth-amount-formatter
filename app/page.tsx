@@ -1,101 +1,90 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+export default function Page() {
+  const [input, setInput] = useState("")
+  const [formatted, setFormatted] = useState("")
+  const [error, setError] = useState("")
+
+  const formatNumber = (value: string) => {
+    // Clear previous error
+    setError("")
+
+    // Remove any non-digit characters except decimal point
+    const cleanValue = value.replace(/[^\d.]/g, "")
+    const num = Number.parseFloat(cleanValue)
+
+    if (isNaN(num)) {
+      setError("Please enter a valid number")
+      setFormatted("")
+      return
+    }
+
+    try {
+      if (num >= 10000000) {
+        // 1,00,00,000 and above (1 Crore+)
+        const inCrores = num / 10000000
+        setFormatted(`${inCrores.toFixed(2)}Cr`)
+      } else if (num >= 100000) {
+        // 1,00,000 to 99,99,999.99
+        // Format with Indian numbering system (no decimals)
+        const formatted = num.toFixed(0).replace(/(\d)(?=(\d\d)+\d$)/g, "$1,")
+        setFormatted(formatted)
+      } else {
+        // 0 to 99,999.99
+        // Format with two decimal places
+        const formatted = num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        setFormatted(formatted)
+      }
+    } catch (err) {
+      setError("Error formatting number")
+      setFormatted("")
+    }
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl p-6 space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Wealth Amount Formatter</h2>
+          <p className="text-sm text-muted-foreground">Format numbers according to the following rules:</p>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li>• 0 to 99,999.99 - show two decimals, Eg. 45,000.34</li>
+            <li>• 1,00,000 to 99,99,999.99 - no decimal point, Eg. 34,56,000</li>
+            <li>• 1,00,00,000 onwards - compress into two decimal points, Eg. 2.34Cr</li>
+          </ul>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="number">Enter a number</Label>
+            <Input
+              id="number"
+              type="text"
+              placeholder="Enter a number (e.g. 45000.34)"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value)
+                formatNumber(e.target.value)
+              }}
+            />
+          </div>
+
+          <div className="p-4 bg-muted rounded-lg">
+            <div className="text-sm font-medium">Formatted Result:</div>
+            {error ? (
+              <div className="text-destructive mt-1">{error}</div>
+            ) : (
+              <div className="text-2xl font-bold mt-1">{formatted || "—"}</div>
+            )}
+          </div>
+        </div>
+      </Card>
     </div>
-  );
+  )
 }
+
