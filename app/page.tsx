@@ -43,11 +43,13 @@ export default function Page() {
         // Format with Indian numbering system (no decimals)
         const formatted = absNum.toFixed(0).replace(/(\d)(?=(\d\d)+\d$)/g, "$1,")
         setFormatted(`${sign}${formatted}`)
-      } else { // 0 to 99,999.99
-        // Show decimals only when they exist (up to 2 decimal places)
-        const hasDecimal = absNum % 1 !== 0
-        const decimalPlaces = hasDecimal ? 2 : 0
-        const formatted = absNum.toFixed(decimalPlaces).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+      } else if (absNum >= 10000) { // 10,000 to 99,999.99
+        // No decimal point
+        const formatted = absNum.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        setFormatted(`${sign}${formatted}`)
+      } else { // 0 to 9,999.99
+        // Show up to two decimals
+        const formatted = absNum.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
         setFormatted(`${sign}${formatted}`)
       }
     } catch (err) {
@@ -63,10 +65,11 @@ export default function Page() {
           <h2 className="text-2xl font-bold">Wealth Amount Formatter</h2>
           <p className="text-sm text-muted-foreground">Format numbers according to the following rules:</p>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• 0 to 99,999.99: Now only shows decimals when they exist (up to 2 decimal places)</li>
-            <li>• 1,00,000 to 9,99,999.99: Shows without decimal points</li>
-            <li>• 10,00,000 to 99,99,999.99: Added new tier that compresses to Lakhs with "L" suffix</li>
-            <li>• 1,00,00,000 onwards: Keeps the Crores format with "Cr" suffix</li>
+            <li>• 0 to 9,999.99: Show up to two decimals (e.g., 4,768.34)</li>
+            <li>• 10,000 to 99,999.99: No decimal point (e.g., 45,000)</li>
+            <li>• 1,00,000 to 9,99,999.99: No decimal point (e.g., 4,56,000)</li>
+            <li>• 10,00,000 to 99,99,999.99: Compresses to Lakhs with "L" suffix upto two decimals (e.g., 34.56L)</li>
+            <li>• 1,00,00,000 onwards: Crores format with "Cr" suffix upto two decimals (e.g., 2.34Cr)</li>
           </ul>
         </div>
 

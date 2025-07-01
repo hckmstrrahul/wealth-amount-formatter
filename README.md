@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wealth Amount Formatter
+
+This is a [Next.js](https://nextjs.org) project that provides a wealth amount formatter with specific formatting rules for different number ranges.
+
+## Formatting Rules
+
+The application formats numbers according to the following rules:
+
+- **0 to 9,999.99**: Show up to two decimals (e.g., 4,768.34)
+- **10,000 to 99,999.99**: No decimal point (e.g., 45,000)
+- **1,00,000 to 9,99,999.99**: No decimal point (e.g., 4,56,000)
+- **10,00,000 to 99,99,999.99**: Compresses to Lakhs with "L" suffix up to two decimals (e.g., 34.56L)
+- **1,00,00,000 onwards**: Crores format with "Cr" suffix up to two decimals (e.g., 2.34Cr)
 
 ## Getting Started
 
