@@ -35,14 +35,10 @@ export default function Page() {
         // Format in Crores
         const inCrores = absNum / 10000000
         setFormatted(`${sign}${inCrores.toFixed(2)}Cr`)
-      } else if (absNum >= 1000000) { // 10,00,000 to 99,99,999.99
+      } else if (absNum >= 100000) { // 1,00,000 to 99,99,999.99
         // Format in Lakhs
         const inLakhs = absNum / 100000
         setFormatted(`${sign}${inLakhs.toFixed(2)}L`)
-      } else if (absNum >= 100000) { // 1,00,000 to 9,99,999.99
-        // Format with Indian numbering system (no decimals)
-        const formatted = absNum.toFixed(0).replace(/(\d)(?=(\d\d)+\d$)/g, "$1,")
-        setFormatted(`${sign}${formatted}`)
       } else if (absNum >= 10000) { // 10,000 to 99,999.99
         // No decimal point
         const formatted = absNum.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
@@ -67,9 +63,8 @@ export default function Page() {
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>• 0 to 9,999.99: Show up to two decimals (e.g., 4,768.34)</li>
             <li>• 10,000 to 99,999.99: No decimal point (e.g., 45,000)</li>
-            <li>• 1,00,000 to 9,99,999.99: No decimal point (e.g., 4,56,000)</li>
-            <li>• 10,00,000 to 99,99,999.99: Compresses to Lakhs with "L" suffix upto two decimals (e.g., 34.56L)</li>
-            <li>• 1,00,00,000 onwards: Crores format with "Cr" suffix upto two decimals (e.g., 2.34Cr)</li>
+            <li>• 1,00,000 to 99,99,999.99: Compresses to Lakhs with "L" suffix up to two decimals (e.g., 34.56L)</li>
+            <li>• 1,00,00,000 onwards: Crores format with "Cr" suffix up to two decimals (e.g., 2.34Cr)</li>
           </ul>
         </div>
 
